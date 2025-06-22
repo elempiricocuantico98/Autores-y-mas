@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Juegos de Escritores Mexicanos</title>
+  <style>
+
+    body {
+    background: linear-gradient(50deg,  #b2dfdb, #00796b 50%, #45cf70 100%);
+    height: 100vh;
+    margin: 0;
+  }
+  .boton-neon:hover {
+    box-shadow: 0 0 20px #FF1493, 0 0 40px #FF1493;
+  }
+    .board {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+      gap: 10px;
+      width: 100%;
+      min-width: 80px;
+      max-width: 80px;
+      margin-top: 15px;
+      padding: 0 10px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #ffffff;
+      text-align: center;
+    }
+    .menu, #mode-selection, #game, #ahorcado-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeIn 0.7s ease-in-out;
+    }
+    .menu.active, #mode-selection.active, #game.active, #ahorcado-container.active {
+      display: flex;
+    }
+    .button {
+      padding: 20px 25px;
+      margin: 18px;
+      border: none;
+      border-radius: 20px;
+      font-size: 20px;
+      cursor: pointer;
+      transition: 0.7s;
+    }
+    .button:hover {
+      transform: scale(1.05);
+    }
+    .primary { background-color: #1e3a8a; color: white; }
+    .secondary { background-color: #ef4444; color: white; }
+    .success { background-color: #10b981; color: white; }
+    .warning { background-color: #f97316; color: white; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+      width: 100%;
+      max-width: 700px;
+    }
+    .card {
+      aspect-ratio: 4 / 4;
+      width: 100%;
+      perspective: 100px;
+      border-radius: 10px;
+    }
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s;
+      cursor: pointer;
+    }
+    .card.flipped .card-inner {
+      transform: rotateY(183deg);
+    }
+    .card-front, .card-back {
+      position: absolute;
+      width: 95%;
+      height: 95%;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backface-visibility: hidden;
+      font-weight: bold;
+      font-size: 15px;
+      overflow: hidden;
+    }
+    .card-front {
+      background: #f97316;
+      color: white;
+    }
+    .card-back {
+      background: #16a34a;
+      transform: rotateY(180deg);
+      flex-direction: column;
+    }
+    .card-back img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 20Spx;
+    }
+    .autor-nombre {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      font-size: 9px;
+      padding: 4px 0;
+      text-align: center;
+    }
+
+    #turn-indicator, #scoreboard, #final-message {
+      margin: 15px;
+      font-size: 23px;
+      font-weight: bold;
+      color: #0f172a;
+    }
+
+    #palabra-oculta {
+      font-size: 24px;
+      margin: 20px 0;
+      letter-spacing: 10px;
+    }
+
+    #letras-container button {
+      margin: 5px;
+      padding: 10px;
+      font-size: 17px;
+      cursor: pointer;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background-color: #f3f4f6;
+      transition: background-color 0.3s;
+    }
+    #letras-container button:hover:not(:disabled) {
+      background-color: #a3bffa;
+    }
+    #letras-container button:disabled {
+      background-color: #d1d5db;
+      cursor: not-allowed;
+    }
+
+    canvas {
+      border: 2px solid #1e293b;
+      margin-bottom: 15px;
+      background-color: #e0e7ff;
+      border-radius: 10px;
+    }
+    .boton-regresar {
+    background-color: #4CAF50; /* Verde */
+    color: white;
+    padding: 10px 20px;
+    font-size: 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .boton-regresar:hover {
+    background-color: #45a049;
+  }
+
+  </style>
+</head>
+<body>
+  <h1>🎮📖 Juegos Literarios📖</h1>
+  <div class="menu active" id="menu">
+    <button class="button primary" onclick="mostrarMemorama()">Memorama</button>
+    <button class="button primary" onclick="mostrarAhorcado()">Ahorcado</button>
+     <button onclick="window.history.back()">⬅ Regresar</button>
+  </div>
+  
+
+  <div id="mode-selection">
+    <button class="button warning" onclick="startGame('single')">Modo Individual</button>
+    <button class="button warning" onclick="startGame('multi')">Multijugador</button>
+    <button class="button secondary" onclick="volverAlMenu()">← Volver</button>
+  </div>
+  <div id="game">
+    <div id="turn-indicator"></div>
+    <button class="button secondary" onclick="volverAlModo()">← Volver</button>
+    <div id="scoreboard"></div>
+    <div class="board" id="board"></div>
+    <div id="final-message"></div>
+    <button class="button success" id="restart-btn" onclick="location.reload()" style="display:none;">Volver a Jugar</button>
+  </div>
+  <div id="ahorcado-container">
+    <canvas id="canvas-ahorcado" width="200" height="250"></canvas>
+    <div id="palabra-oculta">_ _ _ _ _</div>
+    <div id="letras-container"></div>
+    <button class="button secondary" onclick="volverAlMenu()">← Volver</button>
+  </div>
+  <script>
+    const escritores = [
+      { nombre: "Octavio Paz", imagen: "https://media.admagazine.com/photos/618a6650a8ad6c5249a74ff5/4:3/w_2000,h_1500,c_limit/74186.jpg" },
+      { nombre: "Juan Rulfo", imagen: "https://media.vogue.mx/photos/6716a4022e1a79d6365c0148/2:3/w_2560,c_limit/juan-rulto-biografia.jpg" },
+      { nombre: "Rosario Castellanos", imagen: "https://www.nl.gob.mx/sites/default/files/repositorio/Dependencias/Consejo%20para%20la%20Cultura%20y%20las%20Artes%20de%20Nuevo%20Le%C3%B3n%20%28CONARTE%29/Noticias/20240521_Celebrar%C3%A1n_vida_Rosario_Castellanos_2.jpeg" },
+      { nombre: "Carlos Fuentes", imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKfaE882CpbAJZyTD430vzAb2HKtnrkjJJww&s" },
+      { nombre: "Elena Poniatowska", imagen: "https://cdn.forbes.com.mx/2014/08/Elena-Poniatowska_foto1.jpg" },
+      { nombre: "José Emilio Pacheco", imagen: "https://cdn.zendalibros.com/wp-content/uploads/2022/12/jose-emilio-pacheco.jpg" },
+      { nombre: "Amparo Dávila", imagen: "https://hablemos-escritoras-as.s3.us-west-1.amazonaws.com/lce4ohs6lcq4vtot9s8o9ug841vg" },
+      { nombre: "Laura Esquivel", imagen: "https://inba.gob.mx/multimedia/prensa/galerias/14633/14633-IMG_BG_POST-laura_esquivel.jpeg" }
+    ];
+
+    let gameMode = 'single';
+    let currentPlayer = 1;
+    let flipped = [];
+    let matched = 0;
+    let score1 = 0;
+    let score2 = 0;
+
+    function mostrarMemorama() {
+      document.getElementById('menu').classList.remove('active');
+      document.getElementById('mode-selection').classList.add('active');
+    }
+
+    function mostrarAhorcado() {
+      document.getElementById('menu').classList.remove('active');
+      document.getElementById('ahorcado-container').classList.add('active');
+      iniciarAhorcado();
+    }
+
+    function volverAlMenu() {
+      document.getElementById('mode-selection').classList.remove('active');
+      document.getElementById('game').classList.remove('active');
+      document.getElementById('ahorcado-container').classList.remove('active');
+      document.getElementById('menu').classList.add('active');
+    }
+
+    function volverAlModo() {
+      document.getElementById('game').classList.remove('active');
+      document.getElementById('mode-selection').classList.add('active');
+    }
+
+    function startGame(mode) {
+      gameMode = mode;
+      currentPlayer = 1;
+      score1 = 0;
+      score2 = 0;
+      matched = 0;
+      document.getElementById('mode-selection').classList.remove('active');
+      document.getElementById('game').classList.add('active');
+      document.getElementById('turn-indicator').textContent = mode === 'multi' ? 'Turno: Jugador 1' : '';
+      document.getElementById('scoreboard').textContent = mode === 'multi' ? 'Jugador 1: 0 | Jugador 2: 0' : '';
+      document.getElementById('final-message').textContent = '';
+      document.getElementById('restart-btn').style.display = 'none';
+      generarTablero();
+    }
+
+    function generarTablero() {
+      const board = document.getElementById('board');
+      board.innerHTML = '';
+      const cartas = [...escritores, ...escritores].sort(() => 0.5 - Math.random());
+      flipped = [];
+
+      cartas.forEach(autor => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.name = autor.nombre;
+
+        const inner = document.createElement('div');
+        inner.className = 'card-inner';
+
+        const front = document.createElement('div');
+        front.className = 'card-front';
+        front.textContent = '?';
+
+        const back = document.createElement('div');
+        back.className = 'card-back';
+
+        const img = document.createElement('img');
+        img.src = autor.imagen;
+        img.alt = autor.nombre;
+
+        const nombreDiv = document.createElement('div');
+        nombreDiv.className = 'autor-nombre';
+        nombreDiv.textContent = autor.nombre;
+
+        back.appendChild(img);
+        back.appendChild(nombreDiv);
+        inner.appendChild(front);
+        inner.appendChild(back);
+        card.appendChild(inner);
+        board.appendChild(card);
+
+        card.addEventListener('click', () => manejarClick(card));
+      });
+    }
+
+    function manejarClick(card) {
+      if (card.classList.contains('flipped') || flipped.length === 2) return;
+      card.classList.add('flipped');
+      flipped.push(card);
+
+      if (flipped.length === 2) {
+        const [a, b] = flipped;
+        if (a.dataset.name === b.dataset.name) {
+          flipped = [];
+          matched += 2;
+          if (gameMode === 'multi') {
+            if (currentPlayer === 1) score1++;
+            else score2++;
+            actualizarPuntos();
+          }
+          verificarVictoria();
+        } else {
+          setTimeout(() => {
+            a.classList.remove('flipped');
+            b.classList.remove('flipped');
+            flipped = [];
+            if (gameMode === 'multi') {
+              currentPlayer = currentPlayer === 1 ? 2 : 1;
+            document.getElementById('turn-indicator').textContent = `Turno: Jugador ${currentPlayer}`;
+            }
+          }, 1000);
+        }
+      }
+    }
+
+    function actualizarPuntos() {
+     document.getElementById('scoreboard').textContent = `Jugador 1: ${score1} | Jugador 2: ${score2}`;
+
+    }
+    
+
+    function verificarVictoria() {
+      if (matched === escritores.length * 2) {
+        const mensaje = (gameMode === 'multi')
+          ? (score1 > score2 ? '¡Jugador 1 gana! 🎉' : score2 > score1 ? '¡Jugador 2 gana! 🎉' : '¡Empate! 😮')
+          : '¡Felicidades, ganaste! 🎉';
+        document.getElementById('final-message').textContent = mensaje;
+        document.getElementById('restart-btn').style.display = 'inline-block';
+         
+        
+      }
+    }
+
+    // AHORCADO
+    const palabras = ["Literatura", "rulfo", "poniatowska","Paz", "Octavio", "Escritores", "Filosofia", "Reflexion","Resumen", "Lectura", "Escritura"];
+    let palabraActual = "";
+    let palabraOculta = [];
+    let errores = 0;
+    const maxErrores = 9;
+
+    function iniciarAhorcado() {
+      palabraActual = palabras[Math.floor(Math.random() * palabras.length)].toUpperCase();
+      palabraOculta = palabraActual.split('').map(() => '_');
+      document.getElementById('palabra-oculta').textContent = palabraOculta.join(' ');
+      const letras = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+      const contenedor = document.getElementById('letras-container');
+      contenedor.innerHTML = "";
+      errores = 0;
+      limpiarCanvas();
+
+      letras.split('').forEach(letra => {
+        const btn = document.createElement('button');
+        btn.textContent = letra;
+        btn.onclick = () => intentarLetra(letra, btn);
+        contenedor.appendChild(btn);
+      });
+    }
+
+    function intentarLetra(letra, boton) {
+      boton.disabled = true;
+      let acierto = false;
+      palabraActual.split('').forEach((l, i) => {
+        if (l === letra) {
+          palabraOculta[i] = letra;
+          acierto = true;
+        }
+      });
+      document.getElementById('palabra-oculta').textContent = palabraOculta.join(' ');
+      if (!acierto) {
+        errores++;
+        dibujarAhorcado();
+        if (errores >= maxErrores) {
+          setTimeout(() => {
+            alert("¡Has perdido! La palabra era:+palabraActual" + palabraActual);
+            iniciarAhorcado();
+          }, 800);
+        }
+      } else if (!palabraOculta.includes('_')) {
+        alert("¡Felicidades, adivinaste la palabra era:+palabra-oculta");
+        iniciarAhorcado();
+      }
+    }
+
+    function limpiarCanvas() {
+      const ctx = document.getElementById('canvas-ahorcado').getContext('2d');
+      ctx.clearRect(0, 0, 200, 250);
+    }
+
+    function dibujarAhorcado() {
+      const ctx = document.getElementById('canvas-ahorcado').getContext('2d');
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "#1e293b";
+
+      switch (errores) {
+        case 1: // Base
+          ctx.beginPath();
+          ctx.moveTo(10, 240);
+          ctx.lineTo(190, 240);
+          ctx.stroke();
+          break;
+        case 2: // Poste vertical
+          ctx.beginPath();
+          ctx.moveTo(50, 240);
+          ctx.lineTo(50, 20);
+          ctx.stroke();
+          break;
+        case 3: // Poste horizontal y cuerda
+          ctx.beginPath();
+          ctx.moveTo(50, 20);
+          ctx.lineTo(150, 20);
+          ctx.lineTo(150, 50);
+          ctx.stroke();
+          break;
+        case 4: // Cabeza
+          ctx.beginPath();
+          ctx.arc(150, 70, 20, 0, Math.PI * 2);
+          ctx.stroke();
+          break;
+        case 5: // Tronco
+          ctx.beginPath();
+          ctx.moveTo(150, 90);
+          ctx.lineTo(150, 150);
+          ctx.stroke();
+          break;
+        case 6: // Brazo izquierdo
+          ctx.beginPath();
+          ctx.moveTo(150, 100);
+          ctx.lineTo(130, 130);
+          ctx.stroke();
+          break;
+        case 7: // Brazo derecho
+          ctx.beginPath();
+          ctx.moveTo(150, 100);
+          ctx.lineTo(170, 130);
+          ctx.stroke();
+          break;
+        case 8: // Pierna izquierda
+          ctx.beginPath();
+          ctx.moveTo(150, 150);
+          ctx.lineTo(130, 190);
+          ctx.stroke();
+          break;
+        case 9: // Pierna derecha
+          ctx.beginPath();
+          ctx.moveTo(150, 150);
+          ctx.lineTo(170, 190);
+          ctx.stroke();
+          break;
+}
+
+      }
+ 
+  </script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<div id="ahorcado-victoria" style="display:none; text-align:center; margin-top: 20px;">
+  <h2 style="color: #16a34a;">🎉 ¡Ganaste el Ahorcado! 🎉</h2>
+  <button class="button success" onclick="iniciarAhorcado()">Jugar de Nuevo</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+  function lanzarConfeti() {
+    confetti({
+      particleCount: 200,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+  }
+
+  function intentarLetra(letra, boton) {
+    boton.disabled = true;
+    let acierto = false;
+    palabraActual.split('').forEach((l, i) => {
+      if (l === letra) {
+        palabraOculta[i] = letra;
+        acierto = true;
+      }
+    });
+    document.getElementById('palabra-oculta').textContent = palabraOculta.join(' ');
+    if (!acierto) {
+      errores++;
+      dibujarAhorcado();
+      if (errores >= maxErrores) {
+        setTimeout(() => {
+          alert("¡Has perdido! La palabra era: " + palabraActual);
+          iniciarAhorcado();
+        }, 800);
+      }
+    } else if (!palabraOculta.includes('_')) {
+      setTimeout(() => {
+        lanzarConfeti();
+        document.getElementById('letras-container').innerHTML = "";
+        document.getElementById('ahorcado-victoria').style.display = "block";
+      }, 300);
+    }
+  }
+
+  function iniciarAhorcado() {
+    document.getElementById('ahorcado-victoria').style.display = "none";
+    palabraActual = palabras[Math.floor(Math.random() * palabras.length)].toUpperCase();
+    palabraOculta = palabraActual.split('').map(() => '_');
+    document.getElementById('palabra-oculta').textContent = palabraOculta.join(' ');
+    const letras = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    const contenedor = document.getElementById('letras-container');
+    contenedor.innerHTML = "";
+    errores = 0;
+    limpiarCanvas();
+
+    letras.split('').forEach(letra => {
+      const btn = document.createElement('button');
+      btn.textContent = letra;
+      btn.onclick = () => intentarLetra(letra, btn);
+      contenedor.appendChild(btn);
+    });
+  }
+
+
+</script>
+
+</body>
+</html>
