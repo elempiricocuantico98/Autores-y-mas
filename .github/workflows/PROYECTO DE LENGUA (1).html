@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Autores Mexicanos Reconocidos</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #00796b;
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    nav {
+      background-color: #e0f2f1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    nav button {
+      background: none;
+      border: none;
+      font-weight: bold;
+      font-size: 16px;
+      color: #00796b;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+    nav button:hover {
+      transform: scale(1.1);
+      background-color: #b2dfdb;
+      border-radius: 8px;
+    }
+    .autor {
+      background-color: white;
+      margin: 30px auto;
+      padding: 25px;
+      max-width: 900px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: none;
+      cursor: pointer;
+    }
+    .autor.active {
+      display: block;
+    }
+    .autor .biografia-extra {
+      display: none;
+      margin-top: 15px;
+      color: #555;
+    }
+    .autor.mostrar-extra .biografia-extra {
+      display: block;
+    }
+    .intro {
+      background-color: white;
+      margin: 30px auto;
+      padding: 25px;
+      max-width: 900px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      text-align: justify;
+    }
+    h2 {
+      color: #00796b;
+    }
+    ul {
+      margin-top: 0;
+      padding-left: 20px;
+    }
+    img.autor-img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 15px;
+    }
+    footer {
+      background-color: #004d40;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 50px;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #b2dfdb;
+    }
+
+    main {
+      margin-top: 100px; /* espacio para el header fijo */
+      padding: 20px;
+    }
+      #mode-selection,
+  #game,
+  #ahorcado-container {
+    display: none;
+  }
+
+  .active {
+    display: block !important;
+  }
+
+  .menu {
+    display: block;
+    margin-bottom: 20px;
+  }
+#mode-selection,
+#game,
+#ahorcado-container {
+  transition: all 0.4s ease;
+}
+#juegos,
+#menu,
+#mode-selection,
+#game,
+#ahorcado-container {
+  display: none;
+}
+
+#juegos, #menu, #mode-selection, #game, #ahorcado-container {
+  display: none;
+}
+
+#juegos.active, #menu.active, #mode-selection.active, #game.active, #ahorcado-container.active {
+  display: block;
+}
+
+
+#juegos.active,
+#menu.active,
+#mode-selection.active,
+#game.active,
+#ahorcado-container.active {
+  display: block;
+}
+.boton-regresar {
+    background-color: #4CAF50; /* Verde */
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .boton-regresar:hover {
+    background-color: #45a049;
+  }
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Autores Mexicanos Reconocidos</h1>
+    <p>Conoce las biografías, obras y premios de los escritores más influyentes de México</p>
+  </header>
+  <nav>
+  <button onclick="reiniciar()">Inicio</button>
+  <button onclick="mostrarAutor('paz')">Octavio Paz</button>
+  <button onclick="mostrarAutor('rulfo')">Juan Rulfo</button>
+  <button onclick="mostrarAutor('poniatowska')">Elena Poniatowska</button>
+  <button onclick="mostrarAutor('fuentes')">Carlos Fuentes</button>
+  <button onclick="mostrarAutor('castellanos')">Rosario Castellanos</button>
+  <a href="Juegos.html" target="_blank">
+  <button>Ir a Juegos</button>
+</a>
+
+  </nav>
+  <div class="intro" id="intro">
+    <h2>Nuestra Mision es:</h2>
+    <p>Esta página fue creada como parte de un proyecto educativo con el propósito de reconocer y difundir el legado de algunos de los escritores mexicanos más importantes. Aquí podrás conocer sus biografías, descubrir sus obras más destacadas y los premios que han recibido a lo largo de su carrera.</p>
+    <p>Más que una recopilación de información,  la mision de esta página es despertar el interés por la literatura mexicana y resaltar la huella que estos autores han dejado en nuestra cultura. Es un espacio para valorar sus ideas, entender su visión del mundo y sentirnos orgullosos de quienes han hecho de las palabras una forma de identidad.</p>
+  </div>
+  <div class="autor" id="paz" onclick="toggleExtra(this)">
+    <img src="https://www.mexicodesconocido.com.mx/wp-content/uploads/2020/03/paz01.jpg" alt="Octavio Paz" class="autor-img">
+    <h2>Octavio Paz</h2>
+    <p><strong>Biografía:</strong> Octavio Paz (1914–1998) fue un poeta, ensayista y diplomático mexicano...</p>
+    <p><strong>Obras destacadas:</strong></p>
+    <ul>
+      <li>El laberinto de la soledad</li>
+      <li>Piedra de sol</li>
+      <li>El arco y la lira</li>
+    </ul>
+    <p><strong>Premios:</strong></p>
+    <ul>
+      <li>Premio Nobel de Literatura (1990)</li>
+      <li>Premio Cervantes (1981)</li>
+    </ul>
+    <div class="biografia-extra">
+      fue uno de los escritores mexicanos más influyentes del siglo XX. Nació en Ciudad de México y desde joven mostró gran interés por la literatura y la filosofía. Su obra combina elementos del surrealismo, el modernismo y la tradición cultural mexicana, creando un estilo único que explora la identidad, el tiempo, el amor y la existencia.
+Paz tuvo una carrera diplomática que lo llevó a vivir en diferentes países, entre ellos Francia, Estados Unidos e India, donde profundizó en filosofías orientales que enriquecieron su pensamiento. Fue editor de revistas culturales y un activo promotor de la literatura y las artes en México.
+Entre sus obras más famosas destacan El laberinto de la soledad, un ensayo profundo sobre la identidad mexicana; Piedra de sol, un extenso poema que refleja el paso del tiempo y el amor; y El arco y la lira, un ensayo sobre la poesía.
+En 1990, Octavio Paz recibió el Premio Nobel de Literatura, reconocimiento que consolidó su legado como uno de los grandes pensadores y poetas de la literatura hispanoamericana. Su obra sigue siendo estudiada y admirada por su profundidad filosófica y su compromiso con la cultura mexicana.
+    </div>
+  </div>
+  <div class="autor" id="rulfo" onclick="toggleExtra(this)">
+    <img src="https://www.eluniversal.com.mx/resizer/v2/JLAEYC4F5ZBYHHKUWTMY33CQ5Q.jpg?auth=054c8ac85b67a0512a425a14819301fbe208d096b91eb6112ebd1ffbaac8d23e&smart=true&width=1100&height=666" alt="Juan Rulfo" class="autor-img">
+    <h2>Juan Rulfo</h2>
+    <p><strong>Biografía:</strong> Juan Rulfo (1917–1986) fue un escritor, guionista y fotógrafo mexicano...</p>
+    <p><strong>Obras destacadas:</strong></p>
+    <ul>
+      <li>Pedro Páramo</li>
+      <li>El llano en llamas</li>
+    </ul>
+    <p><strong>Premios:</strong></p>
+    <ul>
+      <li>Premio Xavier Villaurrutia (1956)</li>
+      <li>Premio Nacional de Letras (1970)</li>
+    </ul>
+    <div class="biografia-extra">
+       fue un escritor considerado uno de los grandes maestros de la literatura latinoamericana del siglo XX. Nació en Apulco, Jalisco, y su obra, aunque breve en cantidad, tiene un impacto profundo y duradero en la narrativa contemporánea.
+Su narrativa está marcada por un estilo sobrio y poético, que retrata con profundidad el mundo rural mexicano, las dificultades de la vida campesina, la pobreza, la violencia y la soledad. Es conocido por su habilidad para capturar la esencia y el espíritu de los pueblos mexicanos, especialmente en el contexto posterior a la Revolución Mexicana.
+Sus dos principales obras son Pedro Páramo, una novela que mezcla el realismo mágico con elementos fantasmagóricos y el abandono, y El llano en llamas, una colección de cuentos que exploran la vida y las tradiciones del campo mexicano.
+Juan Rulfo influyó en numerosos escritores latinoamericanos y es considerado precursor del realismo mágico, estilo que se popularizó con autores como Gabriel García Márquez. Además de su labor literaria, trabajó como guionista para el cine mexicano y desarrolló una reconocida carrera como fotógrafo.
+Su legado sigue siendo fundamental para entender la literatura mexicana y latinoamericana, destacándose por su sensibilidad y profundidad narrativa.
+    </div>
+  </div>
+  <div class="autor" id="poniatowska" onclick="toggleExtra(this)">
+    <img src="https://i0.wp.com/raicesalaire.com/wp-content/uploads/2022/05/ElenaPoniatowska-Web.jpg?fit=1200%2C627&ssl=1" alt="Elena Poniatowska" class="autor-img">
+    <h2>Elena Poniatowska</h2>
+    <p><strong>Biografía:</strong> Elena Poniatowska (n. 1932) es una escritora, periodista y activista naturalizada mexicana...</p>
+    <p><strong>Obras destacadas:</strong></p>
+    <ul>
+      <li>La noche de Tlatelolco</li>
+      <li>Tinísima</li>
+      <li>Leonora</li>
+    </ul>
+    <p><strong>Premios:</strong></p>
+    <ul>
+      <li>Premio Cervantes (2013)</li>
+      <li>Premio Nacional de Periodismo (1978)</li>
+    </ul>
+    <div class="biografia-extra">
+    Elena Poniatowska (nacida en 1932 en Francia, nacionalizada mexicana) es una destacada escritora, periodista y activista social reconocida por su compromiso con las causas sociales en México. Hija de una familia aristocrática europea, llegó a México en su infancia, donde desarrolló una profunda conexión con la realidad política y social del país.
+Su obra se caracteriza por combinar la crónica periodística con la narrativa literaria, dando voz a sectores marginados como mujeres, obreros, campesinos y víctimas de la violencia. Uno de sus trabajos más reconocidos es La noche de Tlatelolco, que documenta y denuncia la matanza de estudiantes ocurrida en 1968 en la Plaza de las Tres Culturas en la Ciudad de México.
+Además de su labor literaria, Poniatowska ha sido una figura clave en el periodismo crítico y el activismo, defendiendo los derechos humanos y la justicia social. Su estilo accesible, empático y comprometido la ha convertido en una de las voces más importantes del pensamiento contemporáneo mexicano.
+Ha recibido numerosos premios, entre ellos el Premio Cervantes en 2013, uno de los reconocimientos literarios más prestigiosos en el mundo de habla hispana.
+    </div>
+  </div>
+  <div class="autor" id="fuentes" onclick="toggleExtra(this)">
+    <img src="https://thebookoflifemagazine.com/wp-content/uploads/2024/04/carlos-fuentes-detalles-1683912310404.jpeg" alt="Carlos Fuentes" class="autor-img">
+    <h2>Carlos Fuentes</h2>
+    <p><strong>Biografía:</strong> Carlos Fuentes (1928–2012) fue un novelista, ensayista y diplomático mexicano...</p>
+    <p><strong>Obras destacadas:</strong></p>
+    <ul>
+      <li>La región más transparente</li>
+      <li>Terra Nostra</li>
+      <li>La muerte de Artemio Cruz</li>
+    </ul>
+    <p><strong>Premios:</strong></p>
+    <ul>
+      <li>Premio Cervantes (1987)</li>
+      <li>Premio Rómulo Gallegos (1977)</li>
+    </ul>
+    <div class="biografia-extra">
+        fue uno de los escritores y ensayistas más importantes de México y una figura central del llamado “Boom latinoamericano”. Nació en Ciudad de Panamá, pero fue criado en México y tuvo una amplia experiencia internacional debido al trabajo diplomático de su familia.
+Su obra literaria explora la historia, la identidad y las contradicciones de México, combinando elementos políticos, filosóficos y sociales. Sus novelas destacan por su complejidad narrativa y por el uso de simbolismos y técnicas innovadoras. Entre sus obras más destacadas se encuentran La región más transparente, La muerte de Artemio Cruz y Terra Nostra.
+Fuentes también fue un intelectual comprometido con los problemas sociales y políticos de México y Latinoamérica, y su trabajo tuvo un gran impacto en la literatura universal. Recibió premios como el Premio Cervantes en 1987 y el Premio Rómulo Gallegos en 1977.
+    </div>
+  </div>
+  <div class="autor" id="castellanos" onclick="toggleExtra(this)">
+    <img src="https://www.paginazero.com.mx/sites/default/files/styles/large/public/2024-06/rosario%20castellanos.jpg?itok=EsVzTRNK" alt="Rosario Castellanos" class="autor-img">
+    <h2>Rosario Castellanos</h2>
+    <p><strong>Biografía:</strong> Rosario Castellanos (1925–1974) fue una escritora, diplomática y poeta chiapaneca...</p>
+    <p><strong>Obras destacadas:</strong></p>
+    <ul>
+      <li>Balún Canán</li>
+      <li>Oficio de tinieblas</li>
+      <li>Poesía no eres tú</li>
+    </ul>
+    <p><strong>Premios:</strong></p>
+    <ul>
+      <li>Premio Xavier Villaurrutia (1960)</li>
+      <li>Reconocida póstumamente como pionera del feminismo literario</li>
+    </ul>
+    <div class="biografia-extra">
+         fue una poeta, novelista y diplomática mexicana originaria de Chiapas, reconocida como una de las voces femeninas más importantes en la literatura mexicana del siglo XX. Su obra está marcada por una profunda sensibilidad hacia la situación de los pueblos indígenas, la condición de la mujer y la lucha por la igualdad social.
+Castellanos abordó temas como la opresión, el racismo y la desigualdad de género, convirtiéndose en una pionera del feminismo literario en México. Entre sus obras más relevantes se encuentran Balún Canán, Oficio de tinieblas y Poesía no eres tú.
+Además de su trabajo literario, fue embajadora de México en Israel y una defensora constante de los derechos humanos. Su legado ha inspirado a generaciones de escritores y activistas, y es considerada una figura clave en la lucha por la justicia social y cultural en México.
+    </div>
+   <div class="autor active" id="juegos" style="text-align: center;">
+  <h2>Juegos Literarios</h2>
+
+   <div class="autor" id="juegos" style="text-align: center;">
+  <h2>Juegos Literarios</h2>
+  <!-- Aquí terminan los autores -->
+<div class="autor" id="castellanos" onclick="toggleExtra(this)">
+  <!-- contenido autor castellanos -->
+</div>
+
+
+
+<!-- DIV de Juegos separado y fuera de .autor -->
+<div id="juegos" style="text-align: center; display:none;">
+  <h2>Juegos Literarios</h2>
+  <p>Aquí podrás jugar a divertirte aprendiendo: memoramas, ahorcados y más 💡🎮</p>
+
+  <div class="menu" id="menu">
+    <button class="button primary" onclick="mostrarMemorama()">Memorama</button>
+    <button class="button primary" onclick="mostrarAhorcado()">Ahorcado</button>
+  </div>
+
+  <div id="mode-selection">
+    <button class="button warning" onclick="startGame('single')">Modo Individual</button>
+    <button class="button warning" onclick="startGame('multi')">Multijugador</button>
+    <button class="button secondary" onclick="volverAlMenu()">← Volver</button>
+  </div>
+
+  <div id="game">
+    <!-- Aquí va el contenido del memorama -->
+  </div>
+
+  <div id="ahorcado-container">
+    <!-- Aquí va el contenido del ahorcado -->
+  </div>
+</div>
+
+  <div id="ahorcado-container">
+    <canvas id="canvas-ahorcado" width="200" height="250"></canvas>
+    <div id="palabra-oculta">_ _ _ _</div>
+    <div id="letras-container"></div>
+    <div id="ahorcado-victoria" style="display:none;">
+      <h2 style="color: #16a34a;">🎉 ¡Ganaste el Ahorcado! 🎉</h2>
+      <button class="button success" onclick="iniciarAhorcado()">Jugar de Nuevo</button>
+    </div>
+    <button class="button secondary" onclick="volverAlMenu()">← Volver</button>
+  </div>
+</div>
+  <footer>
+    <p>&copy; 2025 Autores Mexicanos | Desarrollado con fines educativos</p>
+  </footer>
+  <script>
+    const escritores = [
+      { nombre: "Octavio Paz", imagen: "https://media.admagazine.com/photos/618a6650a8ad6c5249a74ff5/4:3/w_2000,h_1500,c_limit/74186.jpg" },
+      { nombre: "Juan Rulfo", imagen: "https://media.vogue.mx/photos/6716a4022e1a79d6365c0148/2:3/w_2560,c_limit/juan-rulto-biografia.jpg" },
+      { nombre: "Rosario Castellanos", imagen: "https://www.nl.gob.mx/sites/default/files/repositorio/Dependencias/Consejo%20para%20la%20Cultura%20y%20las%20Artes%20de%20Nuevo%20Le%C3%B3n%20%28CONARTE%29/Noticias/20240521_Celebrar%C3%A1n_vida_Rosario_Castellanos_2.jpeg" },
+      { nombre: "Carlos Fuentes", imagen: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKfaE882CpbAJZyTD430vzAb2HKtnrkjJJww&s" },
+      { nombre: "Elena Poniatowska", imagen: "https://cdn.forbes.com.mx/2014/08/Elena-Poniatowska_foto1.jpg" },
+      { nombre: "José Emilio Pacheco", imagen: "https://cdn.zendalibros.com/wp-content/uploads/2022/12/jose-emilio-pacheco.jpg" },
+      { nombre: "Amparo Dávila", imagen: "https://hablemos-escritoras-as.s3.us-west-1.amazonaws.com/lce4ohs6lcq4vtot9s8o9ug841vg" },
+      { nombre: "Laura Esquivel", imagen: "https://inba.gob.mx/multimedia/prensa/galerias/14633/14633-IMG_BG_POST-laura_esquivel.jpeg" }
+    ];
+
+    let gameMode = 'single';
+    let currentPlayer = 1;
+    let flipped = [];
+    let matched = 0;
+    let score1 = 0;
+    let score2 = 0;
+
+    function mostrarMemorama() {
+      document.getElementById('menu').classList.remove('active');
+      document.getElementById('mode-selection').classList.add('active');
+    }
+
+    function mostrarAhorcado() {
+      document.getElementById('menu').classList.remove('active');
+      document.getElementById('ahorcado-container').classList.add('active');
+      iniciarAhorcado();
+    }
+
+    function volverAlMenu() {
+      document.getElementById('mode-selection').classList.remove('active');
+      document.getElementById('game').classList.remove('active');
+      document.getElementById('ahorcado-container').classList.remove('active');
+      document.getElementById('menu').classList.add('active');
+    }
+
+    function volverAlModo() {
+      document.getElementById('game').classList.remove('active');
+      document.getElementById('mode-selection').classList.add('active');
+    }
+
+    function startGame(mode) {
+      gameMode = mode;
+      currentPlayer = 1;
+      score1 = 0;
+      score2 = 0;
+      matched = 0;
+      document.getElementById('mode-selection').classList.remove('active');
+      document.getElementById('game').classList.add('active');
+      document.getElementById('turn-indicator').textContent = mode === 'multi' ? 'Turno: Jugador 1' : '';
+      document.getElementById('scoreboard').textContent = mode === 'multi' ? 'Jugador 1: 0 | Jugador 2: 0' : '';
+      document.getElementById('final-message').textContent = '';
+      document.getElementById('restart-btn').style.display = 'none';
+      generarTablero();
+    }
+
+    function generarTablero() {
+      const board = document.getElementById('board');
+      board.innerHTML = '';
+      const cartas = [...escritores, ...escritores].sort(() => 0.5 - Math.random());
+      flipped = [];
+
+      cartas.forEach(autor => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.name = autor.nombre;
+
+        const inner = document.createElement('div');
+        inner.className = 'card-inner';
+
+        const front = document.createElement('div');
+        front.className = 'card-front';
+        front.textContent = '?';
+
+        const back = document.createElement('div');
+        back.className = 'card-back';
+
+        const img = document.createElement('img');
+        img.src = autor.imagen;
+        img.alt = autor.nombre;
+
+        const nombreDiv = document.createElement('div');
+        nombreDiv.className = 'autor-nombre';
+        nombreDiv.textContent = autor.nombre;
+
+        back.appendChild(img);
+        back.appendChild(nombreDiv);
+        inner.appendChild(front);
+        inner.appendChild(back);
+        card.appendChild(inner);
+        board.appendChild(card);
+
+        card.addEventListener('click', () => manejarClick(card));
+      });
+    }
+
+    function manejarClick(card) {
+      if (card.classList.contains('flipped') || flipped.length === 2) return;
+      card.classList.add('flipped');
+      flipped.push(card);
+
+      if (flipped.length === 2) {
+        const [a, b] = flipped;
+        if (a.dataset.name === b.dataset.name) {
+          flipped = [];
+          matched += 2;
+          if (gameMode === 'multi') {
+            if (currentPlayer === 1) score1++;
+            else score2++;
+            actualizarPuntos();
+          }
+          verificarVictoria();
+        } else {
+          setTimeout(() => {
+            a.classList.remove('flipped');
+            b.classList.remove('flipped');
+            flipped = [];
+            if (gameMode === 'multi') {
+              currentPlayer = currentPlayer === 1 ? 2 : 1;
+             document.getElementById('turn-indicator').textContent = `Turno: Jugador ${currentPlayer}`;
+             
+             
+
+            }
+          }, 1000);
+        }
+      }
+    }
+
+    function actualizarPuntos() {
+      document.getElementById('scoreboard').textContent = `Jugador 1: ${score1} | Jugador 2: ${score2}`;
+};
+    
+
+    function verificarVictoria() {
+      if (matched === escritores.length * 2) {
+        const mensaje = (gameMode === 'multi')
+          ? (score1 > score2 ? '¡Jugador 1 gana! 🎉' : score2 > score1 ? '¡Jugador 2 gana! 🎉' : '¡Empate! 😮')
+          : '¡Felicidades, ganaste! 🎉';
+        document.getElementById('final-message').textContent = mensaje;
+        document.getElementById('restart-btn').style.display = 'inline-block';
+      }
+    }
+
+    // AHORCADO
+    const palabras = ["paz", "rulfo", "poniatowska"];
+    let palabraActual = "";
+    let palabraOculta = [];
+    let errores = 0;
+    const maxErrores = 9;
+
+    function iniciarAhorcado() {
+      palabraActual = palabras[Math.floor(Math.random() * palabras.length)].toUpperCase();
+      palabraOculta = palabraActual.split('').map(() => '_');
+      document.getElementById('palabra-oculta').textContent = palabraOculta.join(' ');
+      const letras = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+      const contenedor = document.getElementById('letras-container');
+      contenedor.innerHTML = "";
+      errores = 0;
+      limpiarCanvas();
+
+      letras.split('').forEach(letra => {
+        const btn = document.createElement('button');
+        btn.textContent = letra;
+        btn.onclick = () => intentarLetra(letra, btn);
+        contenedor.appendChild(btn);
+      });
+    }
+
+    function intentarLetra(letra, boton) {
+      boton.disabled = true;
+      let acierto = false;
+      palabraActual.split('').forEach((l, i) => {
+        if (l === letra) {
+          palabraOculta[i] = letra;
+          acierto = true;
+        }
+      });
+      document.getElementById('palabra-oculta').textContent = palabraOculta.join(' ');
+      if (!acierto) {
+        errores++;
+        dibujarAhorcado();
+        if (errores >= maxErrores) {
+          setTimeout(() => {
+            alert("¡Has perdido! La palabra era: " + palabraActual);
+            iniciarAhorcado();
+          }, 800);
+        }
+      } else if (!palabraOculta.includes('_')) {
+        alert("¡Felicidades, adivinaste la palabra!");
+        iniciarAhorcado();
+      }
+    }
+
+    function limpiarCanvas() {
+      const ctx = document.getElementById('canvas-ahorcado').getContext('2d');
+      ctx.clearRect(0, 0, 200, 250);
+    }
+
+    function dibujarAhorcado() {
+      const ctx = document.getElementById('canvas-ahorcado').getContext('2d');
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = "#1e293b";
+
+      switch (errores) {
+        case 1: // Base
+          ctx.beginPath();
+          ctx.moveTo(10, 240);
+          ctx.lineTo(190, 240);
+          ctx.stroke();
+          break;
+        case 2: // Poste vertical
+          ctx.beginPath();
+          ctx.moveTo(50, 240);
+          ctx.lineTo(50, 20);
+          ctx.stroke();
+          break;
+        case 3: // Poste horizontal y cuerda
+          ctx.beginPath();
+          ctx.moveTo(50, 20);
+          ctx.lineTo(150, 20);
+          ctx.lineTo(150, 50);
+          ctx.stroke();
+          break;
+        case 4: // Cabeza
+          ctx.beginPath();
+          ctx.arc(150, 70, 20, 0, Math.PI * 2);
+          ctx.stroke();
+          break;
+        case 5: // Tronco
+          ctx.beginPath();
+          ctx.moveTo(150, 90);
+          ctx.lineTo(150, 150);
+          ctx.stroke();
+          break;
+        case 6: // Brazo izquierdo
+          ctx.beginPath();
+          ctx.moveTo(150, 100);
+          ctx.lineTo(130, 130);
+          ctx.stroke();
+          break;
+        case 7: // Brazo derecho
+          ctx.beginPath();
+          ctx.moveTo(150, 100);
+          ctx.lineTo(170, 130);
+          ctx.stroke();
+          break;
+        case 8: // Pierna izquierda
+          ctx.beginPath();
+          ctx.moveTo(150, 150);
+          ctx.lineTo(130, 190);
+          ctx.stroke();
+          break;
+        case 9: // Pierna derecha
+          ctx.beginPath();
+          ctx.moveTo(150, 150);
+          ctx.lineTo(170, 190);
+          ctx.stroke();
+          break;
+}
+
+      }
+ 
+  </script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<div id="ahorcado-victoria" style="display:none; text-align:center; margin-top: 20px;">
+  <h2 style="color: #16a34a;">🎉 ¡Ganaste el Ahorcado! 🎉</h2>
+  <button class="button success" onclick="iniciarAhorcado()">Jugar de Nuevo</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+  function lanzarConfeti() {
+    confetti({
+      particleCount: 200,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+  }
+
+  function intentarLetra(letra, boton) {
+    boton.disabled = true;
+    let acierto = false;
+    palabraActual.split('').forEach((l, i) => {
+      if (l === letra) {
+        palabraOculta[i] = letra;
+        acierto = true;
+      }
+    });
+    document.getElementById('palabra-oculta').textContent = palabraOculta.join(' ');
+    if (!acierto) {
+      errores++;
+      dibujarAhorcado();
+      if (errores >= maxErrores) {
+        setTimeout(() => {
+          alert("¡Has perdido! La palabra era: " + palabraActual);
+          iniciarAhorcado();
+        }, 800);
+      }
+    } else if (!palabraOculta.includes('_')) {
+      setTimeout(() => {
+        lanzarConfeti();
+        document.getElementById('letras-container').innerHTML = "";
+        document.getElementById('ahorcado-victoria').style.display = "block";
+      }, 300);
+    }
+  }
+
+  function iniciarAhorcado() {
+    document.getElementById('ahorcado-victoria').style.display = "none";
+    palabraActual = palabras[Math.floor(Math.random() * palabras.length)].toUpperCase();
+    palabraOculta = palabraActual.split('').map(() => '_');
+    document.getElementById('palabra-oculta').textContent = palabraOculta.join(' ');
+    const letras = "ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
+    const contenedor = document.getElementById('letras-container');
+    contenedor.innerHTML = "";
+    errores = 0;
+    limpiarCanvas();
+
+    letras.split('').forEach(letra => {
+      const btn = document.createElement('button');
+      btn.textContent = letra;
+      btn.onclick = () => intentarLetra(letra, btn);
+      contenedor.appendChild(btn);
+    });
+  }
+ function mostrarAutor(id) {
+      document.getElementById("intro").style.display = "none";
+      const autores = document.querySelectorAll('.autor');
+      autores.forEach(div => {
+        div.classList.remove('active');
+        div.classList.remove('mostrar-extra');
+      });
+      document.getElementById(id).classList.add('active');
+    }
+    function reiniciar() {
+      document.getElementById("intro").style.display = "block";
+      const autores = document.querySelectorAll('.autor');
+      autores.forEach(div => {
+        div.classList.remove('active');
+        div.classList.remove('mostrar-extra');
+      });
+    }
+    function toggleExtra(element) {
+      element.classList.toggle('mostrar-extra');
+    }
+ function irAJuegos() {
+  document.getElementById("intro").style.display = "none";
+
+  // Oculta todos los autores
+  const autores = document.querySelectorAll('.autor');
+  autores.forEach(div => {
+    div.classList.remove('active');
+    div.classList.remove('mostrar-extra');
+  });
+
+  // Muestra la sección de juegos
+  const juegos = document.getElementById("juegos");
+  juegos.classList.add("active");
+
+  // Activa el menú y oculta las otras secciones de juegos
+  document.getElementById("menu").classList.add("active");
+  document.getElementById("mode-selection").classList.remove("active");
+  document.getElementById("game").classList.remove("active");
+  document.getElementById("ahorcado-container").classList.remove("active");
+}// Función para ir a la sección de juegos
+function irAJuegos() {
+  // Ocultar la intro principal
+  document.getElementById('intro').style.display = 'none';
+
+  // Ocultar autores activos
+  const autores = document.querySelectorAll('.autor');
+  autores.forEach(autor => autor.classList.remove('active'));
+
+  // Mostrar la sección de juegos y su menú principal
+  document.getElementById('juegos').classList.add('active');
+  document.getElementById('menu').classList.add('active');
+}
+
+// Función para volver a la página de inicio
+function reiniciar() {
+  // Mostrar la intro principal
+  document.getElementById('intro').style.display = 'block';
+
+  // Ocultar autores y juegos
+  const autores = document.querySelectorAll('.autor');
+  autores.forEach(autor => autor.classList.remove('active'));
+
+  // Ocultar menú y modos de juego
+  document.getElementById('menu').classList.remove('active');
+  document.getElementById('mode-selection').classList.remove('active');
+  document.getElementById('game').classList.remove('active');
+  document.getElementById('ahorcado-container').classList.remove('active');
+}
+
+// Función para mostrar un autor específico
+function mostrarAutor(autorId) {
+  document.getElementById('intro').style.display = 'none';
+  const autores = document.querySelectorAll('.autor');
+  autores.forEach(autor => autor.classList.remove('active'));
+  document.getElementById(autorId).classList.add('active');
+}
+
+// (Las otras funciones: mostrarMemorama, mostrarAhorcado, volverAlMenu, volverAlModo, startGame, etc. ya las tienes bien)
+
+  </script>
+</body>
+</html>
